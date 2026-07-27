@@ -20,6 +20,7 @@
 - [Learning Roadmap](#learning-roadmap)
 - [Repository Structure](#repository-structure)
 - [Engineering Focus](#engineering-focus)
+- [Repository Quality](#repository-quality)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -93,12 +94,18 @@ dotnet-vault/
 - Tests that protect behavior without freezing implementation.
 - CI/CD that promotes an immutable artifact and verifies service health.
 
+## Repository Quality
+
+- Run `pwsh ./scripts/Verify-Docs.ps1` to validate standard section structure and internal Markdown links before opening a pull request.
+- GitHub Actions runs the same documentation gate on pushes to `main`, feature branches, and pull requests into `main`.
+- The check is intentionally structural: it keeps navigation and review flow stable while human review still owns technical correctness.
+
 ## Contributing
 
 1. Keep each change focused on one engineering decision.
 2. Use generic business examples and never include employer or proprietary information.
 3. Preserve the practical page structure and link to primary sources.
-4. Verify code, Markdown links, Mermaid syntax, and technical claims.
+4. Run `pwsh ./scripts/Verify-Docs.ps1` and fix any structural or internal-link failures before opening a pull request.
 5. Explain the production trade-off; do not add unexplained snippets or link dumps.
 
 ## License
