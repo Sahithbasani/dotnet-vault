@@ -78,3 +78,4 @@ State the governing rule, use a concrete backend example, explain the main trade
 - [.NET documentation](https://learn.microsoft.com/dotnet/)
 - [Microsoft .NET application architecture guidance](https://learn.microsoft.com/dotnet/architecture/)
 - [Combining API versioning with OpenAPI in .NET 10 applications](https://devblogs.microsoft.com/dotnet/api-versioning-in-dotnet-10-applications/)
+- [Enhance your CLI testing workflow with the new dotnet test](https://devblogs.microsoft.com/dotnet/dotnet-test-with-mtp/) — explains the .NET 10 test runner configuration and CLI behavior; verify the repository's runner before adopting its examples.

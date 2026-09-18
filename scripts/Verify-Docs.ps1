@@ -231,9 +231,10 @@ function Test-LinkTarget {
     }
 }
 
-$markdownFiles = Get-ChildItem -Path $docsRoot -Recurse -File -Filter *.md | Sort-Object FullName
-$rootReadme = Join-Path $repoRoot "README.md"
-$allPaths = @($rootReadme) + @($markdownFiles | ForEach-Object { $_.FullName })
+$allPaths = @(Get-ChildItem -Path $repoRoot -Recurse -File -Filter *.md |
+    Where-Object { $_.FullName -notlike (Join-Path $repoRoot ".git\*") } |
+    Sort-Object FullName |
+    ForEach-Object { $_.FullName })
 
 foreach ($path in $allPaths) {
     if (-not (Test-Path -LiteralPath $path)) {

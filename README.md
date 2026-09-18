@@ -96,7 +96,7 @@ dotnet-vault/
 
 ## Repository Quality
 
-- Run `pwsh ./scripts/Verify-Docs.ps1` to validate standard section structure and internal Markdown links before opening a pull request.
+- Run `pwsh ./scripts/Verify-Docs.ps1` before opening a pull request. It checks internal links in every Markdown file, including example and image guidance, and enforces the standard section structure under `docs/`.
 - GitHub Actions runs the same documentation gate on pushes to `main`, feature branches, and pull requests into `main`.
 - The check is intentionally structural: it keeps navigation and review flow stable while human review still owns technical correctness.
 
