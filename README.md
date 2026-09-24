@@ -100,6 +100,12 @@ dotnet-vault/
 - GitHub Actions runs the same documentation gate on pushes to `main`, feature branches, and pull requests into `main`.
 - The check is intentionally structural: it keeps navigation and review flow stable while human review still owns technical correctness.
 
+Top-level backtick and tilde code fences are excluded from link and heading checks. A closing fence must use the same character and be at least as long as its opener, so a Markdown example can safely contain shorter fences. Diagnostics retain the original source line numbers.
+
+When editing the verifier, also run `pwsh ./scripts/Test-VerifyDocs.ps1`. These regression scenarios check fenced examples, section validation, and detection of real broken links after a fence. Both commands require PowerShell; no additional test packages are needed. The verifier is a lightweight check, not a complete Markdown parser: nested list/blockquote fences and reference-style links are not supported.
+
+For the parser design background, see GitHub's [A formal spec for GitHub Flavored Markdown](https://github.blog/engineering/user-experience/a-formal-spec-for-github-markdown/). It explains why tooling should follow a shared syntax specification instead of relying on ambiguous Markdown conventions.
+
 ## Contributing
 
 1. Keep each change focused on one engineering decision.

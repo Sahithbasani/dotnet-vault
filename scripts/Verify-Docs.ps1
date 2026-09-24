@@ -4,6 +4,8 @@ param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+. (Join-Path $PSScriptRoot "Markdown-Lines.ps1")
+
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $docsRoot = Join-Path $repoRoot "docs"
 $requiredSections = @(
@@ -54,18 +56,8 @@ function Get-MarkdownHeadings {
 
     $anchors = @()
     $anchorCounts = @{}
-    $inFence = $false
 
-    foreach ($line in Get-Content -LiteralPath $Path) {
-        if ($line.TrimStart().StartsWith('```')) {
-            $inFence = -not $inFence
-            continue
-        }
-
-        if ($inFence) {
-            continue
-        }
-
+    foreach ($line in Get-MarkdownContentLines -Path $Path) {
         if ($line -match '^(#{1,6})\s+(.+?)\s*$') {
             $baseAnchor = ConvertTo-GitHubAnchor -Heading $Matches[2]
             if ([string]::IsNullOrWhiteSpace($baseAnchor)) {
@@ -93,20 +85,10 @@ function Get-MarkdownLinks {
     param([string]$Path)
 
     $results = @()
-    $inFence = $false
     $lineNumber = 0
 
-    foreach ($line in Get-Content -LiteralPath $Path) {
+    foreach ($line in Get-MarkdownContentLines -Path $Path) {
         $lineNumber++
-
-        if ($line.TrimStart().StartsWith('```')) {
-            $inFence = -not $inFence
-            continue
-        }
-
-        if ($inFence) {
-            continue
-        }
 
         $matches = [System.Text.RegularExpressions.Regex]::Matches($line, '!?\[[^\]]*\]\((?<target>[^)]+)\)')
         foreach ($match in $matches) {
@@ -139,18 +121,8 @@ function Test-RequiredSections {
 
     $sectionHeadings = @()
     $h1Count = 0
-    $inFence = $false
 
-    foreach ($line in Get-Content -LiteralPath $Path) {
-        if ($line.TrimStart().StartsWith('```')) {
-            $inFence = -not $inFence
-            continue
-        }
-
-        if ($inFence) {
-            continue
-        }
-
+    foreach ($line in Get-MarkdownContentLines -Path $Path) {
         if ($line -match '^#\s+(.+?)\s*$') {
             $h1Count++
         }
