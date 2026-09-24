@@ -20,3 +20,7 @@ jobs:
       - name: Verify documentation structure and links
         shell: pwsh
         run: ./scripts/Verify-Docs.ps1
+
+      - name: Test documentation verifier regressions
+        shell: pwsh
+        run: ./scripts/Test-VerifyDocs.ps1
