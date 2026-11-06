@@ -20,6 +20,7 @@
 - [Learning Roadmap](#learning-roadmap)
 - [Repository Structure](#repository-structure)
 - [Engineering Focus](#engineering-focus)
+- [Platform Watch](#platform-watch)
 - [Repository Quality](#repository-quality)
 - [Contributing](#contributing)
 - [License](#license)
@@ -94,6 +95,10 @@ dotnet-vault/
 - Tests that protect behavior without freezing implementation.
 - CI/CD that promotes an immutable artifact and verifies service health.
 
+## Platform Watch
+
+For upgrade planning, the [.NET 10 announcement from the .NET team](https://devblogs.microsoft.com/dotnet/announcing-dotnet-10/) is a useful primary-source overview of the current LTS release. Validate application-specific behavior, package compatibility, and deployment support before adopting a new runtime.
+
 ## Repository Quality
 
 - Run `pwsh ./scripts/Verify-Docs.ps1` before opening a pull request. It checks internal links in every Markdown file, including example and image guidance, and enforces the standard section structure under `docs/`.
@@ -125,3 +130,4 @@ No license has been granted yet. The content remains all rights reserved until a
 Maintained as a focused record of practical .NET backend engineering judgment.
 
 </div>
+

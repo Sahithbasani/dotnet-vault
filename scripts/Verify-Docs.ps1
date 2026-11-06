@@ -81,6 +81,60 @@ function Get-MarkdownHeadings {
     return $anchors
 }
 
+function Remove-InlineCodeSpans {
+    param([string]$Line)
+
+    # Links shown as literal Markdown in inline code are examples, not navigable links.
+    # Replace each closed code span with whitespace so the link matcher retains its
+    # original line-level behavior without reporting false positives.
+    $characters = $Line.ToCharArray()
+    $index = 0
+
+    while ($index -lt $characters.Length) {
+        if ($characters[$index] -ne '`') {
+            $index++
+            continue
+        }
+
+        $openerStart = $index
+        while ($index -lt $characters.Length -and $characters[$index] -eq '`') {
+            $index++
+        }
+        $delimiterLength = $index - $openerStart
+        $closerStart = -1
+        $scan = $index
+
+        while ($scan -lt $characters.Length) {
+            if ($characters[$scan] -ne '`') {
+                $scan++
+                continue
+            }
+
+            $runStart = $scan
+            while ($scan -lt $characters.Length -and $characters[$scan] -eq '`') {
+                $scan++
+            }
+
+            if (($scan - $runStart) -eq $delimiterLength) {
+                $closerStart = $runStart
+                break
+            }
+        }
+
+        if ($closerStart -lt 0) {
+            # An unmatched delimiter is ordinary text for this line-level checker.
+            break
+        }
+
+        for ($replaceIndex = $openerStart; $replaceIndex -lt ($closerStart + $delimiterLength); $replaceIndex++) {
+            $characters[$replaceIndex] = ' '
+        }
+        $index = $closerStart + $delimiterLength
+    }
+
+    return -join $characters
+}
+
 function Get-MarkdownLinks {
     param([string]$Path)
 
@@ -89,8 +143,9 @@ function Get-MarkdownLinks {
 
     foreach ($line in Get-MarkdownContentLines -Path $Path) {
         $lineNumber++
+        $linkableLine = Remove-InlineCodeSpans -Line $line
 
-        $matches = [System.Text.RegularExpressions.Regex]::Matches($line, '!?\[[^\]]*\]\((?<target>[^)]+)\)')
+        $matches = [System.Text.RegularExpressions.Regex]::Matches($linkableLine, '!?\[[^\]]*\]\((?<target>[^)]+)\)')
         foreach ($match in $matches) {
             $target = $match.Groups["target"].Value.Trim()
 
@@ -231,3 +286,4 @@ if ($failures.Count -gt 0) {
 }
 
 Write-Host ("Verified {0} Markdown files and {1} internal link(s)." -f $allPaths.Count, $linkCount)
+
