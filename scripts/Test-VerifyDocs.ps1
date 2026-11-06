@@ -44,8 +44,21 @@ try {
     if ($failures.Count -ne 1 -or $failures[0] -notmatch ':4 references missing path') {
         throw 'Real broken link after fence was not reported at line 4'
     }
-    Write-Host 'Passed 10 Markdown fence regression scenarios.'
+
+    Set-Content $fixture -Value @('Use `[example](missing.md)` when explaining Markdown.', '[real](#visible)')
+    $links = @(Get-MarkdownLinks $fixture)
+    if ($links.Count -ne 1 -or $links[0].Target -ne '#visible' -or $links[0].LineNumber -ne 2) {
+        throw 'Inline code span was treated as a navigable link'
+    }
+
+    Set-Content $fixture -Value @('``[example](missing.md)``', '[real](#visible)')
+    $links = @(Get-MarkdownLinks $fixture)
+    if ($links.Count -ne 1 -or $links[0].Target -ne '#visible') {
+        throw 'Multi-backtick inline code span was treated as a navigable link'
+    }
+    Write-Host 'Passed Markdown fence and inline-code regression scenarios.'
 }
 finally {
     Remove-Item -LiteralPath $fixture
 }
+
